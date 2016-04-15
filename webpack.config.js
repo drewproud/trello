@@ -7,7 +7,7 @@ module.exports = {
   devtool: '#eval-source-map',
   entry: [
     'webpack-hot-middleware/client',
-    './client/app.js'
+    './client/app.jsx'
   ],
   output: {
     path: __dirname,
@@ -20,7 +20,7 @@ module.exports = {
     new webpack.NoErrorsPlugin()
   ],
   resolve: {
-    extensions: ['', '.js'],
+    extensions: ['', '.js', '.jsx'],
     alias: {
       request: 'browser-request'
     }
@@ -29,13 +29,13 @@ module.exports = {
     loaders: [
       // Javascript
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         loader: 'babel',
         include: path.join(__dirname, 'client'),
         query: {
           "env": {
             "development": {
-              "presets": ["react-hmre"],
+              "presets": ["react-hmre", 'es2015', 'stage-0'],
               "plugins": [
                 ["react-transform", {
                   "transforms": [{

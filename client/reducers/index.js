@@ -1,13 +1,14 @@
-var initial = {
+const initial = {
   num: 5,
 };
-var handlers = {
+const handlers = {
   INC(s) {
     return {
       num: s.num + 1
     };
   }
 };
+
 function reducer(state = initial, action) {
   if (handlers[action.type]) {
     return handlers[action.type](state);
@@ -16,4 +17,4 @@ function reducer(state = initial, action) {
   return state;
 }
 
-module.exports = reducer;
+export default reducer;

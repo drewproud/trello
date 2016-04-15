@@ -1,34 +1,31 @@
-require('css-modules-require-hook')({
-  generateScopedName: '[path][name]-[local]',
-});
 require('babel-register');
 
+var fs = require('fs');
 var express = require('express');
-
 var chokidar = require('chokidar');
 var webpack = require('webpack');
 var config = require('./webpack.config');
 var compiler = webpack(config);
+var middleware = require('webpack-dev-middleware');
+
+/* eslint-disable no-sync */
+var template = fs.readFileSync(__dirname + '/index.html', 'utf8');
+/* eslint-enable no-sync */
+
+require('css-modules-require-hook')({
+  generateScopedName: '[path][name]-[local]',
+});
 
 var app = express();
 
 // Serve hot-reloading bundle to client
-app.use(require('webpack-dev-middleware')(compiler, {
+app.use(middleware(compiler, {
   noInfo: true, publicPath: config.output.publicPath
 }));
 app.use(require('webpack-hot-middleware')(compiler));
 
-// Include server routes as a middleware
-app.use(function(req, res, next) {
-  require('./server/app')(req, res, next);
-});
-
-// Anything else gets passed to the client app's server rendering
-app.get('*', function(req, res, next) {
-  require('./client/server-render')(req.path, function(err, page) {
-    if (err) return next(err);
-    res.send(page);
-  });
+app.get('*', function(req, res) {
+    res.send(template);
 });
 
 // Do 'hot-reloading' of express stuff on the server
