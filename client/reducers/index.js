@@ -1,20 +1,16 @@
-const initial = {
-  num: 5,
-};
-const handlers = {
-  INC(s) {
-    return {
-      num: s.num + 1
-    };
-  }
-};
+import { DATA_RECEIVED } from '../actions';
 
-function reducer(state = initial, action) {
-  if (handlers[action.type]) {
-    return handlers[action.type](state);
+function itemsForCart(state = [], action) {
+  switch(action.type) {
+    case DATA_RECEIVED:
+      return action.payload.data;
+    default:
+      return state;
   }
-
-  return state;
 }
 
-export default reducer;
+export function selectItemsForCart(state) {
+  return state.treats || [];
+}
+
+export default itemsForCart;

@@ -1,30 +1,40 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styles from './App.css';
+import { loadData } from '../actionCreators';
+import { bindActionCreators } from 'redux';
+import initialData from '../data';
+import { selectItemsForCart } from '../reducers';
 
-const App = connect(state => ({count: state}))(React.createClass({
+const App = React.createClass({
   propTypes: {
-    count: React.PropTypes.object.isRequired,
-    dispatch: React.PropTypes.func.isRequired
+    loadData: React.PropTypes.func.isRequired,
+    itemsForCart: React.PropTypes.array.isRequired
   },
+
+  componentDidMount: function() {
+      this.props.loadData(initialData);
+  },
+
   render() {
-    const { count, dispatch } = this.props;
+    const { itemsForCart } = this.props;
     return (
       <div>
-        <h1>Demo</h1>
-        <p>{count.num}</p>
-        <button
-          className={ styles.increment }
-          onClick={ () => dispatch({type: "INC"}) }
-        >
-          +1
-        </button>
-        <p>
-          <a href="/whoami">Server-only route</a>
-        </p>
       </div>
     );
   },
-}));
+});
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    itemsForCart: selectItemsForCart(state),
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        loadData,
+    }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
