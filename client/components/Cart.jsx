@@ -5,6 +5,7 @@ import { loadData } from '../actionCreators';
 import { bindActionCreators } from 'redux';
 import initialData from '../data';
 import { selectItemsForCart } from '../reducers';
+import CartItem from './CartItem';
 
 const Cart = React.createClass({
   propTypes: {
@@ -18,8 +19,12 @@ const Cart = React.createClass({
 
   render() {
     const { itemsForCart } = this.props;
+    const items = itemsForCart.map(function(item) {
+      return <CartItem item={ item } key={ item.id } />
+    });
     return (
       <div>
+        { items }
       </div>
     );
   },
