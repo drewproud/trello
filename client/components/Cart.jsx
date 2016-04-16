@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import styles from './App.css';
+import styles from './Cart.css';
 import { loadData } from '../actionCreators';
 import { bindActionCreators } from 'redux';
 import initialData from '../data';
 import { selectItemsForCart } from '../reducers';
 
-const App = React.createClass({
+const Cart = React.createClass({
   propTypes: {
     loadData: React.PropTypes.func.isRequired,
     itemsForCart: React.PropTypes.array.isRequired
@@ -37,4 +37,4 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);
