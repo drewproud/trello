@@ -1,1 +1,2 @@
 export const DATA_RECEIVED = 'cart/DATA_RECEIVED';
+export const UPDATE_QUANTITY_IN_CART = 'cart/UPDATE_QUANTITY_IN_CART';

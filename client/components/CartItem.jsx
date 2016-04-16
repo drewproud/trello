@@ -1,37 +1,23 @@
 import React from 'react';
-
-const ItemBulkPricing = React.createClass({
-  propTypes: {
-    bulkPricing: React.PropTypes.shape({
-      amount: React.PropTypes.number.isRequired,
-      totalPrice: React.PropTypes.number.isRequired,
-    }),
-  },
-
-  render: function() {
-    const { bulkPricing } = this.props;
-    if (!bulkPricing) {
-      return <div></div>;
-    }
-
-    const { amount, totalPrice } = bulkPricing;
-    return (
-      <div className="item-data-element">
-        { amount } for { totalPrice }
-        <div className="item-label">bulk price</div> 
-      </div>
-    );
-  },
-});
+import ItemBulkPricing from './ItemBulkPricing';
 
 const CartItem = React.createClass({
   propTypes: {
     item: React.PropTypes.object.isRequired,
+    updateCartItemQuantity: React.PropTypes.func.isRequired,
+  },
+
+  changeHandlder: function(event) {
+    const newQuantity = Number(event.target.value);
+    const { updateCartItemQuantity, item } = this.props;
+    updateCartItemQuantity(item.id, newQuantity);
   },
 
   render: function() {
     const HEIGHT = 32;
-    const { price, imageURL, name, bulkPricing } = this.props.item;
+    const { updateCartItemQuantity, item } = this.props;
+    const { price, imageURL, name, bulkPricing, quantityInCart } = item;
+
     return (
       <div className="item">
         <h5>{ name }</h5>
@@ -44,6 +30,9 @@ const CartItem = React.createClass({
             <div className="item-label">price</div> 
           </div>
           <ItemBulkPricing bulkPricing={ bulkPricing } />
+          <div className="item-quantity">
+            <input value={ quantityInCart } type="number" onChange={ this.changeHandlder } />
+          </div>
         </div>
       </div>
     );
