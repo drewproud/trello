@@ -3,13 +3,13 @@ import CartItem from './CartItem';
 
 const Cart = React.createClass({
   propTypes: {
-    itemsForCart: React.PropTypes.array.isRequired,
+    itemsInCart: React.PropTypes.array.isRequired,
     updateCartItemQuantity: React.PropTypes.func.isRequired,
   },
 
   render: function() {
-    const { itemsForCart, updateCartItemQuantity } = this.props;
-    const items = itemsForCart.map(function(item) {
+    const { itemsInCart, updateCartItemQuantity } = this.props;
+    const items = itemsInCart.map(function(item) {
       return <CartItem item={ item } key={ item.id } updateCartItemQuantity={ updateCartItemQuantity } />
     });
     return (

@@ -7,7 +7,7 @@ import Cart from './Cart';
 import styles from './Cart.css';
 import initialData from '../data';
 import { loadData, updateCartItemQuantity } from '../actionCreators';
-import { selectItemsForCart } from '../reducers';
+import { selectItemsInCart, selectAvailableItemsInStore } from '../reducers';
 
 function getBulkPricingComponentForItem(item) {
   const { bulkPricing, quantityInCart } = item;
@@ -40,18 +40,19 @@ export function calculatePriceForItem(item) {
   return bulkPricingComponent.price + individualPricingComponenet;
 }
 
-export function calculateTotalPrice(itemsForCart) {
+export function calculateTotalPrice(itemsInCart) {
   return R.compose(
     R.sum,
     R.map(calculatePriceForItem)
-  )(itemsForCart);
+  )(itemsInCart);
 }
 
 const CartContainer = React.createClass({
   propTypes: {
     updateCartItemQuantity: React.PropTypes.func.isRequired,
     loadData: React.PropTypes.func.isRequired,
-    itemsForCart: React.PropTypes.array.isRequired,
+    itemsInCart: React.PropTypes.array.isRequired,
+    itemsInStore: React.PropTypes.array.isRequired,
   },
 
   componentDidMount: function() {
@@ -59,12 +60,12 @@ const CartContainer = React.createClass({
   },
 
   render() {
-    const { itemsForCart } = this.props;
-    console.log(calculateTotalPrice(itemsForCart));
+    const { itemsInCart, itemsInStore } = this.props;
+    console.log(calculateTotalPrice(itemsInCart));
     return (
       <div>
         <Cart
-          itemsForCart={ itemsForCart }
+          itemsInCart={ itemsInCart }
           updateCartItemQuantity={ this.props.updateCartItemQuantity }
         />
       </div>
@@ -74,7 +75,8 @@ const CartContainer = React.createClass({
 
 function mapStateToProps(state) {
   return {
-    itemsForCart: selectItemsForCart(state),
+    itemsInCart: selectItemsInCart(state),
+    itemsInStore: selectAvailableItemsInStore(state),
   };
 }
 

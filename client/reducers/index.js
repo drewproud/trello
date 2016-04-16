@@ -1,3 +1,4 @@
+import { combineReducers } from 'redux';
 import { DATA_RECEIVED, UPDATE_QUANTITY_IN_CART } from '../actions';
 import R from 'ramda';
 
@@ -5,21 +6,13 @@ function getItemDict(items) {
   return items.reduce(function(acc, item) {
     return {
       ...acc,
-      [item.id]: {
-        quantityInCart: 0,
-        ...item,
-      },
+      [item.id]: item,
     };
   }, {});
 }
 
-function itemsForCart(state = {}, action) {
+function itemsInCart(state = {}, action) {
   switch(action.type) {
-    case DATA_RECEIVED:
-      return {
-        ...state,
-        ...getItemDict(action.payload.data.treats),
-      };
     case UPDATE_QUANTITY_IN_CART:
       const { itemId, newQuantity } = action.payload;
       const prevItemState = state[itemId];
@@ -35,9 +28,40 @@ function itemsForCart(state = {}, action) {
   }
 }
 
-
-export function selectItemsForCart(state) {
-  return R.values(state);
+function items(state = {}, action) {
+  switch(action.type) {
+    case DATA_RECEIVED:
+      return {
+        ...state,
+        ...getItemDict(action.payload.data.treats),
+      };
+    default:
+      return state;
+  }
 }
 
-export default itemsForCart;
+export function selectAvailableItemsInStore(state) {
+  return R.values(state.items);
+}
+
+const joinItemsAndCartItems = R.curry(function(items, itemsInCart) {
+  return R.mapObjIndexed(function(val, id) {
+    return {
+      ...items[id],
+      ...val
+    };
+  });
+});
+
+export function selectItemsInCart(state) {
+  const { items, itemsInCart } = state;
+  return R.compose(
+    R.values,
+    joinItemsAndCartItems(items)
+  )(itemsInCart);
+}
+
+export default combineReducers({
+  items,
+  itemsInCart,
+});
