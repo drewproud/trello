@@ -1,5 +1,5 @@
 import React from 'react';
-import ItemBulkPricing from './ItemBulkPricing';
+import Item from './Item';
 
 const CartItem = React.createClass({
   propTypes: {
@@ -14,27 +14,14 @@ const CartItem = React.createClass({
   },
 
   render: function() {
-    const HEIGHT = 32;
-    const { updateCartItemQuantity, item } = this.props;
-    const { price, imageURL, name, bulkPricing, quantityInCart } = item;
+    const { item } = this.props;
 
     return (
-      <div className="item">
-        <h5>{ name }</h5>
-        <div className="item-data-section">
-          <div className="item-image">
-            <img src={ imageURL } height={ HEIGHT } width={ HEIGHT } />
-          </div>
-          <div className="item-data-element">
-            { price }
-            <div className="item-label">price</div> 
-          </div>
-          <ItemBulkPricing bulkPricing={ bulkPricing } />
-          <div className="item-quantity">
-            <input value={ quantityInCart } type="number" onChange={ this.changeHandlder } />
-          </div>
+      <Item item={ item }>
+        <div className="item-quantity">
+          <input value={ item.quantityInCart } type="number" onChange={ this.changeHandlder } />
         </div>
-      </div>
+      </Item>
     );
   },
 });

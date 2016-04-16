@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Cart from './Cart';
+import Store from './Store';
 import styles from './Cart.css';
 import initialData from '../data';
 import { loadData, updateCartItemQuantity } from '../actionCreators';
@@ -34,7 +35,6 @@ export function getIndividualPricingComponenetForItem(item, bulkPricingComponent
 }
 
 export function calculatePriceForItem(item) {
-  const { price, bulkPricing } = item;
   const bulkPricingComponent = getBulkPricingComponentForItem(item);
   const individualPricingComponenet = getIndividualPricingComponenetForItem(item, bulkPricingComponent);
   return bulkPricingComponent.price + individualPricingComponenet;
@@ -64,6 +64,7 @@ const CartContainer = React.createClass({
     console.log(calculateTotalPrice(itemsInCart));
     return (
       <div>
+        <Store itemsInStore={ itemsInStore } />
         <Cart
           itemsInCart={ itemsInCart }
           updateCartItemQuantity={ this.props.updateCartItemQuantity }
