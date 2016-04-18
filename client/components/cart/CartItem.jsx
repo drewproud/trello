@@ -1,5 +1,5 @@
 import React from 'react';
-import { calculatePriceForItem, formatPrice } from '../lib/prices';
+import { calculatePriceForItem, formatPrice } from '../../lib/prices';
 
 const CartItem = React.createClass({
   propTypes: {
@@ -31,7 +31,7 @@ const CartItem = React.createClass({
           { name }
         </div>
         <div className="col-xs-3">
-          <input className="form-control" value={ quantityInCart } type="number" onChange={ this.changeHandlder } />
+          <input min="0" className="form-control" value={ quantityInCart } type="number" onChange={ this.changeHandlder } />
         </div>
         <div className="col-xs-3">
           { formatPrice(calculatedPrice) }

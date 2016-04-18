@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatPrice } from '../lib/prices';
+import { formatPrice } from '../../lib/prices';
 
 const ItemBulkPricing = React.createClass({
   propTypes: {

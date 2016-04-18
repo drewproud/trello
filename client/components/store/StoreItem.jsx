@@ -1,8 +1,7 @@
 import React from 'react';
-import Item from './Item';
 import ItemBulkPricing from './ItemBulkPricing';
 import AddRemoveItemControl from './AddRemoveItemControl';
-import { formatPrice } from '../lib/prices';
+import { formatPrice } from '../../lib/prices';
 
 const IMG_SIZE = 100;
 

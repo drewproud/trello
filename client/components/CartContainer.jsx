@@ -2,8 +2,8 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Cart from './Cart';
-import Store from './Store';
+import Cart from './cart/Cart';
+import Store from './store/Store';
 import initialData from '../data';
 import { loadData, updateCartItemQuantity, addItemToCart, removeItemFromCart, removeAllItemsFromCart } from '../actionCreators';
 import { selectItemsInCart, selectAvailableItemsInStore } from '../reducers';

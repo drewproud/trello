@@ -1,5 +1,5 @@
 import React from 'react';
-import { calculateTotalPrice, formatPrice } from '../lib/prices';
+import { calculateTotalPrice, formatPrice } from '../../lib/prices';
 
 const CartTotal = React.createClass({
   propTypes: {
