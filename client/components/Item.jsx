@@ -16,15 +16,19 @@ const Item = React.createClass({
       <div className="item">
         <h5>{ name }</h5>
         <div className="item-data-section">
-          <div className="item-image">
+          <div className="column item-image">
             <img src={ imageURL } height={ HEIGHT } width={ HEIGHT } />
           </div>
-          <div className="item-data-element">
+          <div className="column item-data-element">
             { price }
-            <div className="item-label">price</div> 
+            <div className="column item-label">price</div> 
           </div>
-          <ItemBulkPricing bulkPricing={ bulkPricing } />
-          { children }
+          <div className="column">
+            <ItemBulkPricing bulkPricing={ bulkPricing } />
+          </div>
+          <div className="column">
+            { children }
+          </div>
         </div>
       </div>
     );

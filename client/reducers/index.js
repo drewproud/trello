@@ -1,19 +1,28 @@
 import { combineReducers } from 'redux';
-import { DATA_RECEIVED, UPDATE_QUANTITY_IN_CART } from '../actions';
+import {
+  DATA_RECEIVED,
+  QUANTITY_IN_CART_UPDATED,
+  ADD_ITEM_TO_CART_CLICKED,
+  REMOVE_ITEM_FROM_CART_CLICKED,
+} from '../actions';
 import R from 'ramda';
 
 function getItemDict(items) {
   return items.reduce(function(acc, item) {
     return {
       ...acc,
-      [item.id]: item,
+      [item.id]: {
+        ...item,
+        inCart: false,
+      },
     };
   }, {});
 }
 
+/*
 function itemsInCart(state = {}, action) {
   switch(action.type) {
-    case UPDATE_QUANTITY_IN_CART:
+    case QUANTITY_IN_CART_UPDATED:
       const { itemId, newQuantity } = action.payload;
       const prevItemState = state[itemId];
       return {
@@ -27,6 +36,7 @@ function itemsInCart(state = {}, action) {
       return state;
   }
 }
+*/
 
 function items(state = {}, action) {
   switch(action.type) {
@@ -35,15 +45,42 @@ function items(state = {}, action) {
         ...state,
         ...getItemDict(action.payload.data.treats),
       };
+    case ADD_ITEM_TO_CART_CLICKED:
+      return {
+        ...state,
+        [action.payload.itemId]: {
+          ...state[action.payload.itemId],
+          inCart: true,
+          quantityInCart: 1,
+        },
+      };
+    case REMOVE_ITEM_FROM_CART_CLICKED:
+      return {
+        ...state,
+        [action.payload.itemId]: {
+          ...state[action.payload.itemId],
+          inCart: false,
+          quantityInCart: 0,
+        },
+      };
+    case QUANTITY_IN_CART_UPDATED:
+      return {
+        ...state,
+        [action.payload.itemId]: {
+          ...state[action.payload.itemId],
+          quantityInCart: action.payload.newQuantity,
+        },
+      };
     default:
       return state;
   }
 }
 
 export function selectAvailableItemsInStore(state) {
-  return R.values(state.items);
+  return R.values(state);
 }
 
+/*
 const joinItemsAndCartItems = R.curry(function(items, itemsInCart) {
   return R.mapObjIndexed(function(val, id) {
     return {
@@ -52,16 +89,13 @@ const joinItemsAndCartItems = R.curry(function(items, itemsInCart) {
     };
   });
 });
+*/
 
 export function selectItemsInCart(state) {
-  const { items, itemsInCart } = state;
   return R.compose(
     R.values,
-    joinItemsAndCartItems(items)
-  )(itemsInCart);
+    R.filter(R.prop('inCart'))
+  )(state);
 }
 
-export default combineReducers({
-  items,
-  itemsInCart,
-});
+export default items;

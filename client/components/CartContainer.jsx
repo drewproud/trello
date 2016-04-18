@@ -7,7 +7,7 @@ import Cart from './Cart';
 import Store from './Store';
 import styles from './Cart.css';
 import initialData from '../data';
-import { loadData, updateCartItemQuantity } from '../actionCreators';
+import { loadData, updateCartItemQuantity, addItemToCart, removeItemFromCart } from '../actionCreators';
 import { selectItemsInCart, selectAvailableItemsInStore } from '../reducers';
 
 function getBulkPricingComponentForItem(item) {
@@ -51,6 +51,8 @@ const CartContainer = React.createClass({
   propTypes: {
     updateCartItemQuantity: React.PropTypes.func.isRequired,
     loadData: React.PropTypes.func.isRequired,
+    addItemToCart: React.PropTypes.func.isRequired,
+    removeItemFromCart: React.PropTypes.func.isRequired,
     itemsInCart: React.PropTypes.array.isRequired,
     itemsInStore: React.PropTypes.array.isRequired,
   },
@@ -63,12 +65,23 @@ const CartContainer = React.createClass({
     const { itemsInCart, itemsInStore } = this.props;
     console.log(calculateTotalPrice(itemsInCart));
     return (
-      <div>
-        <Store itemsInStore={ itemsInStore } />
-        <Cart
-          itemsInCart={ itemsInCart }
-          updateCartItemQuantity={ this.props.updateCartItemQuantity }
-        />
+      <div className="container">
+        <div className="row">
+          <div className="col-xs-8">
+            <Store
+              itemsInStore={ itemsInStore }
+              addItemToCart={ this.props.addItemToCart }
+              removeItemFromCart={ this.props.removeItemFromCart }
+            />
+          </div>
+          <div className="col-xs-4">
+            <Cart
+              itemsInCart={ itemsInCart }
+              updateCartItemQuantity={ this.props.updateCartItemQuantity }
+              removeItemFromCart={ this.props.removeItemFromCart }
+            />
+          </div>
+        </div>
       </div>
     );
   },
@@ -82,10 +95,12 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        loadData,
-        updateCartItemQuantity,
-    }, dispatch);
+  return bindActionCreators({
+    loadData,
+    updateCartItemQuantity,
+    addItemToCart,
+    removeItemFromCart,
+  }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CartContainer);

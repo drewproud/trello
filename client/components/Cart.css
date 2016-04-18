@@ -1,8 +1,17 @@
-.increment {
-    composes: box from "../common/layout.css";
-    color: white;
-    cursor: pointer;
-    border: 1px solid green;
-    border-radius: 3px;
-    background-color: green;
+.store-row {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.store-img {
+  float: right;
+}
+
+.item-info {
+  background-color: #EFEFEF;
+  padding: 10px;
+}
+
+.item-add-remove {
+  padding-top: 5px;
 }

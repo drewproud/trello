@@ -11,15 +11,14 @@ const ItemBulkPricing = React.createClass({
   render: function() {
     const { bulkPricing } = this.props;
     if (!bulkPricing) {
-      return <div></div>;
+      return <span></span>;
     }
 
     const { amount, totalPrice } = bulkPricing;
     return (
-      <div className="item-data-element">
-        { amount } for { totalPrice }
-        <div className="item-label">bulk price</div> 
-      </div>
+      <span>
+        or { amount } for { totalPrice }
+      </span>
     );
   },
 });

@@ -1,25 +1,42 @@
 import React from 'react';
 import Item from './Item';
+import ItemBulkPricing from './ItemBulkPricing';
+import AddRemoveItemControl from './AddRemoveItemControl';
 
 const StoreItem = React.createClass({
   propTypes: {
     item: React.PropTypes.object.isRequired,
-  },
-
-  addItemToCart: function() {
+    addItemToCart: React.PropTypes.func.isRequired,
+    removeItemFromCart: React.PropTypes.func.isRequired,
   },
 
   render: function() {
-    const { item } = this.props;
+    const IMG_SIZE = 100;
+    const { item, addItemToCart, removeItemFromCart } = this.props;
+    const { price, imageURL, name, bulkPricing, inCart, id } = item;
 
     return (
-      <Item item={ item }>
-        <div className="item-add-to-cart">
-          <button className="btn btn-block" type="button" onClick={ this.addItemToCart }>
-            Add Item
-          </button>
+      <div className="row store-row">
+        <div className="col-xs-4">
+          <img className="store-img" src={ imageURL } height={ IMG_SIZE } width={ IMG_SIZE }/>
         </div>
-      </Item>
+        <div className="col-xs-8 item-info" style={{ height: IMG_SIZE + 'px' }}>
+          <div>
+            <strong>{ name }</strong>
+          </div>
+          <div>
+          { price } <ItemBulkPricing bulkPricing={ bulkPricing } />
+          </div>
+          <div className="item-add-remove">
+            <AddRemoveItemControl
+              addItemToCart={ addItemToCart }
+              removeItemFromCart={ removeItemFromCart }
+              itemId={ id }
+              inCart={ inCart }
+            />
+          </div>
+        </div>
+      </div>
     );
   },
 });
