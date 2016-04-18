@@ -2,6 +2,9 @@ import React from 'react';
 import Item from './Item';
 import ItemBulkPricing from './ItemBulkPricing';
 import AddRemoveItemControl from './AddRemoveItemControl';
+import { formatPrice } from '../lib/prices';
+
+const IMG_SIZE = 100;
 
 const StoreItem = React.createClass({
   propTypes: {
@@ -11,7 +14,6 @@ const StoreItem = React.createClass({
   },
 
   render: function() {
-    const IMG_SIZE = 100;
     const { item, addItemToCart, removeItemFromCart } = this.props;
     const { price, imageURL, name, bulkPricing, inCart, id } = item;
 
@@ -25,7 +27,7 @@ const StoreItem = React.createClass({
             <strong>{ name }</strong>
           </div>
           <div>
-          { price } <ItemBulkPricing bulkPricing={ bulkPricing } />
+            { formatPrice(price) } <ItemBulkPricing bulkPricing={ bulkPricing } />
           </div>
           <div className="item-add-remove">
             <AddRemoveItemControl

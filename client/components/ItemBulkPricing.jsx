@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatPrice } from '../lib/prices';
 
 const ItemBulkPricing = React.createClass({
   propTypes: {
@@ -17,7 +18,7 @@ const ItemBulkPricing = React.createClass({
     const { amount, totalPrice } = bulkPricing;
     return (
       <span>
-        or { amount } for { totalPrice }
+        or { amount } for { formatPrice(totalPrice) }
       </span>
     );
   },

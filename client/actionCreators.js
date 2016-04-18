@@ -1,4 +1,10 @@
-import { DATA_RECEIVED, QUANTITY_IN_CART_UPDATED, ADD_ITEM_TO_CART_CLICKED, REMOVE_ITEM_FROM_CART_CLICKED } from './actions';
+import {
+  DATA_RECEIVED,
+  QUANTITY_IN_CART_UPDATED,
+  ADD_ITEM_TO_CART_CLICKED,
+  REMOVE_ITEM_FROM_CART_CLICKED,
+  REMOVE_ALL_ITEMS_FROM_CART_CLICKED,
+} from './actions';
 
 export function loadData(data) {
   return {
@@ -34,5 +40,12 @@ export function removeItemFromCart(itemId) {
     payload: {
       itemId,
     },
+  };
+}
+
+export function removeAllItemsFromCart() {
+  return {
+    type: REMOVE_ALL_ITEMS_FROM_CART_CLICKED,
+    payload: {},
   };
 }

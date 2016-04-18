@@ -4,6 +4,7 @@ import {
   QUANTITY_IN_CART_UPDATED,
   ADD_ITEM_TO_CART_CLICKED,
   REMOVE_ITEM_FROM_CART_CLICKED,
+  REMOVE_ALL_ITEMS_FROM_CART_CLICKED,
 } from '../actions';
 import R from 'ramda';
 
@@ -19,24 +20,13 @@ function getItemDict(items) {
   }, {});
 }
 
-/*
-function itemsInCart(state = {}, action) {
-  switch(action.type) {
-    case QUANTITY_IN_CART_UPDATED:
-      const { itemId, newQuantity } = action.payload;
-      const prevItemState = state[itemId];
-      return {
-        ...state,
-        [itemId]: {
-          ...prevItemState,
-          quantityInCart: newQuantity,
-        },
-      };
-    default:
-      return state;
-  }
+function setItemRemovedFromCart(item) {
+  return {
+    ...item,
+    inCart: false,
+    quantityInCart: 0,
+  };
 }
-*/
 
 function items(state = {}, action) {
   switch(action.type) {
@@ -57,12 +47,10 @@ function items(state = {}, action) {
     case REMOVE_ITEM_FROM_CART_CLICKED:
       return {
         ...state,
-        [action.payload.itemId]: {
-          ...state[action.payload.itemId],
-          inCart: false,
-          quantityInCart: 0,
-        },
+        [action.payload.itemId]: setItemRemovedFromCart(state[action.payload.itemId]),
       };
+    case REMOVE_ALL_ITEMS_FROM_CART_CLICKED:
+      return R.map(setItemRemovedFromCart, state);
     case QUANTITY_IN_CART_UPDATED:
       return {
         ...state,
@@ -79,17 +67,6 @@ function items(state = {}, action) {
 export function selectAvailableItemsInStore(state) {
   return R.values(state);
 }
-
-/*
-const joinItemsAndCartItems = R.curry(function(items, itemsInCart) {
-  return R.mapObjIndexed(function(val, id) {
-    return {
-      ...items[id],
-      ...val
-    };
-  });
-});
-*/
 
 export function selectItemsInCart(state) {
   return R.compose(
