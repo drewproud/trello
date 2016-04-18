@@ -34,7 +34,6 @@ const CartContainer = React.createClass({
             <Store
               itemsInStore={ itemsInStore }
               addItemToCart={ this.props.addItemToCart }
-              removeItemFromCart={ this.props.removeItemFromCart }
             />
           </div>
           <div className="col-xs-4">

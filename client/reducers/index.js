@@ -1,3 +1,4 @@
+import R from 'ramda';
 import { combineReducers } from 'redux';
 import {
   DATA_RECEIVED,
@@ -6,7 +7,6 @@ import {
   REMOVE_ITEM_FROM_CART_CLICKED,
   REMOVE_ALL_ITEMS_FROM_CART_CLICKED,
 } from '../actions';
-import R from 'ramda';
 
 function getItemDict(items) {
   return items.reduce(function(acc, item) {
@@ -15,6 +15,7 @@ function getItemDict(items) {
       [item.id]: {
         ...item,
         inCart: false,
+        quantityInCart: 0,
       },
     };
   }, {});
@@ -36,12 +37,13 @@ function items(state = {}, action) {
         ...getItemDict(action.payload.data.treats),
       };
     case ADD_ITEM_TO_CART_CLICKED:
+      const oldItem = state[action.payload.itemId];
       return {
         ...state,
         [action.payload.itemId]: {
-          ...state[action.payload.itemId],
+          ...oldItem,
           inCart: true,
-          quantityInCart: 1,
+          quantityInCart: oldItem.quantityInCart + 1,
         },
       };
     case REMOVE_ITEM_FROM_CART_CLICKED:

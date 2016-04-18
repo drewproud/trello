@@ -5,7 +5,6 @@ const Store = React.createClass({
   propTypes: {
     itemsInStore: React.PropTypes.array.isRequired,
     addItemToCart: React.PropTypes.func.isRequired,
-    removeItemFromCart: React.PropTypes.func.isRequired,
   },
 
   render: function() {
@@ -16,7 +15,6 @@ const Store = React.createClass({
           item={ item }
           key={ item.id }
           addItemToCart={ addItemToCart }
-          removeItemFromCart={ removeItemFromCart }
         />
       );
     });

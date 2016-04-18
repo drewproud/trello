@@ -9,12 +9,11 @@ const StoreItem = React.createClass({
   propTypes: {
     item: React.PropTypes.object.isRequired,
     addItemToCart: React.PropTypes.func.isRequired,
-    removeItemFromCart: React.PropTypes.func.isRequired,
   },
 
   render: function() {
     const { item, addItemToCart, removeItemFromCart } = this.props;
-    const { price, imageURL, name, bulkPricing, inCart, id } = item;
+    const { price, imageURL, name, bulkPricing, id } = item;
 
     return (
       <div className="row store-row">
@@ -31,9 +30,7 @@ const StoreItem = React.createClass({
           <div className="item-add-remove">
             <AddRemoveItemControl
               addItemToCart={ addItemToCart }
-              removeItemFromCart={ removeItemFromCart }
               itemId={ id }
-              inCart={ inCart }
             />
           </div>
         </div>
