@@ -1,10 +1,11 @@
 import {
-  CARD_ADD_BUTTON_CLICKED,
+  NEW_CARD_ADDED,
 } from './actions';
 
-export function addCardButtonClicked(group, cardId, text) {
+export function addNewCard(group, text) {
+  const cardId = String(Math.round(Math.random() * 1000));
   return {
-    type: CARD_ADD_BUTTON_CLICKED,
+    type: NEW_CARD_ADDED,
     payload: {
       group,
       cardId,

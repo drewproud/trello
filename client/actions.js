@@ -1,1 +1,2 @@
-export const CARD_ADD_BUTTON_CLICKED = 'card/CARD_ADD_BUTTON_CLICKED';
+export const NEW_CARD_ADDED = 'card/NEW_CARD_ADDED';
+export const NEW_GROUP_ADDED = 'card/NEW_GROUP_ADDED';

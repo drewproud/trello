@@ -9,9 +9,8 @@ const AddNewCardPanel = React.createClass({
 
   handleClick: function(event) {
     event.preventDefault();
-    const cardId = Math.round(Math.random() * 1000);
     const { text } = this.state;
-    this.props.addCardButtonClicked('test', cardId, text);
+    this.props.addNewCard('test', text);
   },
 
   setText: function(event) {

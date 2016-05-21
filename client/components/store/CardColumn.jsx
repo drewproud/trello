@@ -5,11 +5,11 @@ import AddNewCardPanel from './AddNewCardPanel';
 const CardColumn = React.createClass({
   propTypes: {
     itemsInStore: React.PropTypes.array.isRequired,
-    addCardButtonClicked: React.PropTypes.func.isRequired,
+    addNewCard: React.PropTypes.func.isRequired,
   },
 
   render: function() {
-    const { itemsInStore, addCardButtonClicked } = this.props;
+    const { itemsInStore, addNewCard } = this.props;
     const items = itemsInStore.map(function(item) {
       return (
         <Card
@@ -19,12 +19,14 @@ const CardColumn = React.createClass({
       );
     });
     return (
-      <div className="col-xs-4">
-        <div className="col-xs-12" style={{ backgroundColor: '#D2D2D2', borderRadius: '4px' }}>
-          { items }
-          <AddNewCardPanel
-            addCardButtonClicked={ addCardButtonClicked }
-          />
+      <div style={{ width: '400px', marginLeft: '20px', display: 'inline-block', float: 'left', backgroundColor: 'aliceblue' }}>
+        <div className="col-xs-12" style={{ padding: '20px' }}>
+          <div className="col-xs-12" style={{ backgroundColor: '#D2D2D2', borderRadius: '4px' }}>
+            { items }
+            <AddNewCardPanel
+              addNewCard={ addNewCard }
+            />
+          </div>
         </div>
       </div>
     );

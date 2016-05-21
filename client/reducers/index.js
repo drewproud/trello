@@ -1,64 +1,72 @@
 import R from 'ramda';
 import { combineReducers } from 'redux';
 import {
-  DATA_RECEIVED,
-  QUANTITY_IN_CART_UPDATED,
-  ADD_ITEM_TO_CART_CLICKED,
-  REMOVE_ITEM_FROM_CART_CLICKED,
-  REMOVE_ALL_ITEMS_FROM_CART_CLICKED,
+  NEW_CARD_ADDED,
+  NEW_GROUP_ADDED,
 } from '../actions';
 
-function getItemDict(items) {
-  return items.reduce(function(acc, item) {
-    return {
-      ...acc,
-      [item.id]: {
-        ...item,
-        inCart: false,
-        quantityInCart: 0,
-      },
-    };
-  }, {});
+// recursively check characters at each level to check if they are the same
+// as soon as they are not the same, check the next char on the firstId
+// increment by 1 (treat undefined as 0 and use 'a')
+// 
+// when incrementing characters, treat > Z by adding Za
+// 
+// when firstId is null, append space to id and start at 'a'
+//
+// abc
+// abd
+//
+function incrementChar(char) {
+  const charCode = char.charCodeAt(0);
+  return String.fromCharCode(charCode + 1);
 }
 
-function setItemRemovedFromCart(item) {
-  return {
-    ...item,
-    inCart: false,
-    quantityInCart: 0,
-  };
+function getNextCharCode(char) {
+  if (!char) {
+    return 'a';
+  }
+
+  if (char === 'Z') {
+    return 'Za';
+  }
+
+  return incrementChar(char);
 }
 
-function items(state = {}, action) {
+export function getNewIdBetween(firstId, secondId = '') {
+  if (!firstId) {
+    return secondId.substring(0, secondId.length - 1) + ' a';
+  }
+
+  for (let i = 0; i < firstId.length; i++) {
+    if (firstId[i] !== secondId[i]) {
+      return firstId.substring(0, i + 1) + getNextCharCode(firstId[i + 1]);
+    }
+  }
+  throw new Error('SAME_ID');
+}
+
+function cards(state = {}, action) {
   switch(action.type) {
-    case DATA_RECEIVED:
+    case NEW_CARD_ADDED:
       return {
         ...state,
-        ...getItemDict(action.payload.data.treats),
-      };
-    case ADD_ITEM_TO_CART_CLICKED:
-      const oldItem = state[action.payload.itemId];
-      return {
-        ...state,
-        [action.payload.itemId]: {
-          ...oldItem,
-          inCart: true,
-          quantityInCart: oldItem.quantityInCart + 1,
+        [action.payload.groupId]: {
+          ...state[action.payload.groupId],
+          cards: {
+            ...state[action.payload.groupId].cards,
+            [action.payload.cardId]: {
+              text: action.payload.text,
+            },
+          },
         },
       };
-    case REMOVE_ITEM_FROM_CART_CLICKED:
+    case NEW_GROUP_ADDED:
       return {
         ...state,
-        [action.payload.itemId]: setItemRemovedFromCart(state[action.payload.itemId]),
-      };
-    case REMOVE_ALL_ITEMS_FROM_CART_CLICKED:
-      return R.map(setItemRemovedFromCart, state);
-    case QUANTITY_IN_CART_UPDATED:
-      return {
-        ...state,
-        [action.payload.itemId]: {
-          ...state[action.payload.itemId],
-          quantityInCart: action.payload.newQuantity,
+        [action.payload.groupId]: {
+          name: action.payload.groupName,
+          cards: {},
         },
       };
     default:
@@ -70,11 +78,4 @@ export function selectAvailableItemsInStore(state) {
   return R.values(state);
 }
 
-export function selectItemsInCart(state) {
-  return R.compose(
-    R.values,
-    R.filter(R.prop('inCart'))
-  )(state);
-}
-
-export default items;
+export default cards;

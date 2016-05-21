@@ -4,11 +4,11 @@ import EditRemoveCardControl from './EditRemoveCardControl';
 const Card = React.createClass({
   propTypes: {
     item: React.PropTypes.object.isRequired,
-    addCardButtonClicked: React.PropTypes.func.isRequired,
+    addNewCard: React.PropTypes.func.isRequired,
   },
 
   render: function() {
-    const { item, addCardButtonClicked, removeItemFromCart } = this.props;
+    const { item, addNewCard, removeItemFromCart } = this.props;
     const { name, id } = item;
     const text = 'test';
 
@@ -22,15 +22,17 @@ const Card = React.createClass({
             { text }
           </div>
           <div className="item-add-remove">
-            <EditRemoveCardControl
-              removeCard={ addCardButtonClicked }
-              itemId={ id }
-            />
           </div>
         </div>
       </div>
     );
   },
 });
+
+
+            //<EditRemoveCardControl
+              //removeCard={  }
+              //itemId={ id }
+            ///>
 
 export default Card;
