@@ -28,22 +28,10 @@ const cardTarget = {
     const dragIndex = dragItem.groupIndex;
     const dropIndex = props.groupIndex;
 
-    // Determine rectangle on screen
     const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
-
-    // Get vertical middle
     const hoverMiddleY = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
-
-    // Determine mouse position
     const clientOffset = monitor.getClientOffset();
-
-    // Get pixels to the right
     const hoverClientY = clientOffset.x - hoverBoundingRect.left;
-
-    // Only perform the move when the mouse has crossed half of the items height
-    // When dragging downwards, only move when the cursor is below 50%
-    // When dragging upwards, only move when the cursor is above 50%
-
     const onLeft = hoverClientY < hoverMiddleY;
 
     // Dragging right
@@ -68,20 +56,31 @@ const CardColumn = React.createClass({
     title: React.PropTypes.string.isRequired,
     addNewCard: React.PropTypes.func.isRequired,
     moveGroup: React.PropTypes.func.isRequired,
+    removeCard: React.PropTypes.func.isRequired,
     connectDragSource: React.PropTypes.func.isRequired,
     connectDropTarget: React.PropTypes.func.isRequired,
-    isOver: React.PropTypes.bool.isRequired,
     isDragging: React.PropTypes.bool.isRequired,
   },
 
   render: function() {
-    const { title, cards, addNewCard, groupId, groupIndex, connectDragSource, connectDropTarget, isOver, isDragging } = this.props;
+    const {
+      title,
+      cards,
+      addNewCard,
+      removeCard,
+      groupId,
+      groupIndex,
+      connectDragSource,
+      connectDropTarget,
+      isDragging,
+    } = this.props;
     const items = cards.map(function(item) {
       return (
         <Card
           item={ item }
           groupId={ groupId }
           key={ item.cardId }
+          removeCard={ removeCard }
         />
       );
     });
@@ -92,22 +91,21 @@ const CardColumn = React.createClass({
       marginLeft: `${GUTTER_WIDTH_IN_PIXELS}px`,
       display: 'inline-block',
       float: 'left',
-      backgroundColor: 'aliceblue',
+      backgroundColor: '#E2E4E6',
+      borderRadius: '4px',
     };
 
     return connectDragSource(connectDropTarget(
       <div style={ style }>
         <div className="col-xs-12" style={{ padding: '20px' }}>
-          <div className="col-xs-12" style={{ backgroundColor: 'transparent' }}>
-            { title }
+          <div className="col-xs-12" style={{ textAlign: 'center' }}>
+            <h3 style={{ marginTop: '0', marginBottom: '20px' }}>{ title }</h3>
           </div>
-          <div className="col-xs-12" style={{ backgroundColor: '#D2D2D2', borderRadius: '4px' }}>
-            { items }
-            <AddNewCardPanel
-              addNewCard={ addNewCard }
-              groupId={ groupId }
-            />
-          </div>
+          { items }
+          <AddNewCardPanel
+            addNewCard={ addNewCard }
+            groupId={ groupId }
+          />
         </div>
       </div>
     ));
@@ -116,5 +114,5 @@ const CardColumn = React.createClass({
 
 export default compose(
   DragSource('CARD', cardSource, (connect, monitor) => ({ connectDragSource: connect.dragSource(), isDragging: monitor.isDragging(), })),
-  DropTarget('CARD', cardTarget, (connect, monitor) => ({ connectDropTarget: connect.dropTarget(), isOver: monitor.isOver() }))
+  DropTarget('CARD', cardTarget, (connect) => ({ connectDropTarget: connect.dropTarget() }))
 )(CardColumn);

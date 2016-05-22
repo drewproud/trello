@@ -10,11 +10,12 @@ const Board = React.createClass({
     addNewCard: React.PropTypes.func.isRequired,
     addNewCardGroup: React.PropTypes.func.isRequired,
     moveGroup: React.PropTypes.func.isRequired,
+    removeCard: React.PropTypes.func.isRequired,
     cardGroups: React.PropTypes.array.isRequired,
   },
 
   render: function() {
-    const { cardGroups, addNewCard, addNewCardGroup, moveGroup } = this.props;
+    const { cardGroups, addNewCard, addNewCardGroup, moveGroup, removeCard } = this.props;
     const columns = cardGroups.map(function({ groupId, cards, title }, idx) {
       return (
         <CardColumn
@@ -25,6 +26,7 @@ const Board = React.createClass({
           cards={ cards }
           addNewCard={ addNewCard }
           moveGroup={ moveGroup }
+          removeCard={ removeCard }
         />
       );
     });

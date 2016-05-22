@@ -4,12 +4,16 @@ import EditRemoveCardControl from './EditRemoveCardControl';
 const Card = React.createClass({
   propTypes: {
     item: React.PropTypes.object.isRequired,
+    removeCard: React.PropTypes.func.isRequired,
+  },
+
+  removeCard: function() {
+    this.props.removeCard(this.props.item.cardId);
   },
 
   render: function() {
-    const { item, removeItemFromCart } = this.props;
-    const { name, id } = item;
-    const text = 'test';
+    const { item } = this.props;
+    const { name, text } = item;
 
     return (
       <div className="row store-row">
@@ -19,6 +23,12 @@ const Card = React.createClass({
           </div>
           <div>
             { text }
+            <a
+              href="#!"
+              className="glyphicon glyphicon-remove"
+              style={{ textDecoration: 'none', color: 'black', float: 'right '}}
+              onClick={ this.removeCard }
+            ></a>
           </div>
           <div className="item-add-remove">
           </div>

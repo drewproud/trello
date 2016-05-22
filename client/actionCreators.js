@@ -3,6 +3,7 @@ import {
   NEW_GROUP_ADDED,
   GROUP_MOVED,
   CARD_MOVED,
+  CARD_REMOVED,
 } from './actions';
 
 export function addNewCard(groupId, text) {
@@ -35,6 +36,15 @@ export function moveGroup(sourceGroupId, targetGroupId, isBefore) {
       sourceGroupId,
       targetGroupId,
       isBefore,
+    },
+  };
+}
+
+export function removeCard(cardId) {
+  return {
+    type: CARD_REMOVED,
+    payload: {
+      cardId,
     },
   };
 }

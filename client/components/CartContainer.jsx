@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import R from 'ramda';
 
 import Board from './Board';
-import { addNewCard, addNewCardGroup, moveGroup } from '../actionCreators';
+import { addNewCard, addNewCardGroup, moveGroup, removeCard } from '../actionCreators';
 import { selectCardGroups } from '../reducers';
 
 import './Cart.css';
@@ -18,11 +18,12 @@ const CartContainer = React.createClass({
     addNewCard: React.PropTypes.func.isRequired,
     addNewCardGroup: React.PropTypes.func.isRequired,
     moveGroup: React.PropTypes.func.isRequired,
+    removeCard: React.PropTypes.func.isRequired,
     cardGroups: React.PropTypes.array.isRequired,
   },
 
   render: function() {
-    const { cardGroups, addNewCard, addNewCardGroup, moveGroup } = this.props;
+    const { cardGroups, addNewCard, addNewCardGroup, moveGroup, removeCard } = this.props;
     const screenWidth = getScreenWidth(cardGroups.length);
 
     return (
@@ -36,6 +37,7 @@ const CartContainer = React.createClass({
             addNewCardGroup={ addNewCardGroup }
             cardGroups={ cardGroups }
             moveGroup={ moveGroup }
+            removeCard={ removeCard }
           />
         </div>
       </div>
@@ -54,6 +56,7 @@ function mapDispatchToProps(dispatch) {
     addNewCard,
     addNewCardGroup,
     moveGroup,
+    removeCard,
   }, dispatch);
 }
 

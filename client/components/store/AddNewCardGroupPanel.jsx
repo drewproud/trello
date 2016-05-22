@@ -22,19 +22,21 @@ const AddNewCardGroupPanel = React.createClass({
 
   render: function() {
     return (
-      <div style={{ width: '400px', marginLeft: '20px', display: 'inline-block', float: 'left', backgroundColor: 'aliceblue' }}>
+      <div style={{ width: '400px', marginLeft: '20px', display: 'inline-block', float: 'left', borderRadius: '4px', backgroundColor: '#E2E4E6' }}>
         <div className="col-xs-12" style={{ padding: '20px' }}>
-          <form id="add-group-form" onSubmit={ this.handleSubmit }>
+          <form id="add-group-form" style={{ margin: '0' }} onSubmit={ this.handleSubmit }>
             <div className="row">
               <div className="col-xs-12">
-                <input type="text" className="form-control" onChange={ this.handleChange } value={ this.state.value } />
+                <input type="text" className="form-control" placeholder="Add new group..." onChange={ this.handleChange } value={ this.state.value } />
               </div>
             </div>
-            <div className="row" style={{ marginTop: '10px' }}>
-              <div className="col-xs-4 pull-right">
-                <button type="submit" className="btn btn-info btn-block">Add</button>
+            { this.state.value &&
+              <div className="row" style={{ marginTop: '10px' }}>
+                <div className="col-xs-4 pull-right">
+                  <button type="submit" className="btn btn-info btn-block">Add</button>
+                </div>
               </div>
-            </div>
+            }
           </form>
         </div>
       </div>

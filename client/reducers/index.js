@@ -5,10 +5,20 @@ import {
   NEW_GROUP_ADDED,
   GROUP_MOVED,
   CARD_MOVED,
+  CARD_REMOVED,
 } from '../actions';
 
 function sortBySortIndex(arr) {
   return R.invoker(0, 'sort')(arr);
+}
+
+function getGroupIdForCardId(groupDict, cardId) {
+  return R.compose(
+    R.prop('groupId'),
+    R.find(group => !!group.cards[cardId]),
+    R.values,
+    R.mapObjIndexed((val, key) => ({ ...val, groupId: key }))
+  )(groupDict);
 }
 
 // recursively check characters at each level to check if they are the same
@@ -129,6 +139,15 @@ function cards(state = {}, action) {
         [action.payload.sourceGroupId]: {
           ...state[action.payload.sourceGroupId],
           sortIndex: getNewSortIndexForTarget(action.payload.sourceGroupId, action.payload.targetGroupId, action.payload.isBefore, state),
+        },
+      };
+    case CARD_REMOVED:
+      const groupId = getGroupIdForCardId(state, action.payload.cardId);
+      return {
+        ...state,
+        [groupId]: {
+          ...state[groupId],
+          cards: R.omit(action.payload.cardId, state[groupId].cards),
         },
       };
     default:
