@@ -1,37 +1,42 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import R from 'ramda';
 
-import CardColumn from './store/CardColumn';
-import AddNewCardGroupPanel from './store/AddNewCardGroupPanel';
-import { addNewCard } from '../actionCreators';
-import { selectAvailableItemsInStore } from '../reducers';
+import Board from './Board';
+import { addNewCard, addNewCardGroup, moveGroup } from '../actionCreators';
+import { selectCardGroups } from '../reducers';
 
 import './Cart.css';
+
+function getScreenWidth(numberOfCards) {
+  return (numberOfCards + 1) * 420 + 20;
+}
 
 const CartContainer = React.createClass({
   propTypes: {
     addNewCard: React.PropTypes.func.isRequired,
-    itemsInStore: React.PropTypes.array.isRequired,
+    addNewCardGroup: React.PropTypes.func.isRequired,
+    moveGroup: React.PropTypes.func.isRequired,
+    cardGroups: React.PropTypes.array.isRequired,
   },
 
-  render() {
-    const { itemsInStore } = this.props;
+  render: function() {
+    const { cardGroups, addNewCard, addNewCardGroup, moveGroup } = this.props;
+    const screenWidth = getScreenWidth(cardGroups.length);
+
     return (
-      <div>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 text-center">
-              <h1>Trello Clone Example</h1>
-            </div>
+      <div style={{ overflowX: 'scroll' }}>
+        <div style={{ width: `${screenWidth}px`, height: '100%' }}>
+          <div className="text-center" style={{ width: '100vw' }}>
+            <h1>Trello Clone Example</h1>
           </div>
-        </div>
-        <div>
-          <CardColumn
-            itemsInStore={ itemsInStore }
-            addNewCard={ this.props.addNewCard }
+          <Board
+            addNewCard={ addNewCard }
+            addNewCardGroup={ addNewCardGroup }
+            cardGroups={ cardGroups }
+            moveGroup={ moveGroup }
           />
-          <AddNewCardGroupPanel />
         </div>
       </div>
     );
@@ -40,13 +45,15 @@ const CartContainer = React.createClass({
 
 function mapStateToProps(state) {
   return {
-    itemsInStore: selectAvailableItemsInStore(state),
+    cardGroups: selectCardGroups(state),
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     addNewCard,
+    addNewCardGroup,
+    moveGroup,
   }, dispatch);
 }
 

@@ -3,7 +3,13 @@ import { combineReducers } from 'redux';
 import {
   NEW_CARD_ADDED,
   NEW_GROUP_ADDED,
+  GROUP_MOVED,
+  CARD_MOVED,
 } from '../actions';
+
+function sortBySortIndex(arr) {
+  return R.invoker(0, 'sort')(arr);
+}
 
 // recursively check characters at each level to check if they are the same
 // as soon as they are not the same, check the next char on the firstId
@@ -33,7 +39,7 @@ function getNextCharCode(char) {
   return incrementChar(char);
 }
 
-export function getNewIdBetween(firstId, secondId = '') {
+export function getNewSortIndexBetween(firstId, secondId = '') {
   if (!firstId) {
     return secondId.substring(0, secondId.length - 1) + ' a';
   }
@@ -44,6 +50,52 @@ export function getNewIdBetween(firstId, secondId = '') {
     }
   }
   throw new Error('SAME_ID');
+}
+
+
+function getCardSortIndicesFromCards(groups) {
+  return R.compose(
+    sortBySortIndex,
+    R.pluck('sortIndex'),
+    R.values
+  )(groups);
+}
+
+function getGroupSortIndicesFromGroups(groups) {
+  return R.compose(
+    R.sortBy(R.prop('sortIndex')),
+    R.values,
+    R.pick(['sortIndex', 'groupId']),
+    R.mapObjIndexed((val, key) => ({ ...val, groupId: key }))
+  )(groups);
+}
+
+function getNeighborSortIndex(sortIndexList, targetSortIndex, isBefore) {
+  const idx = sortIndexList.indexOf(targetSortIndex);
+  const offset = isBefore ? -1 : 1;
+  return sortIndexList[idx + offset];
+}
+
+function getNewSortIndexForTarget(sourceGroupId, targetGroupId, isBefore, state) {
+  // get sorted index list
+  const sortedGroups = getGroupSortIndicesFromGroups(state);
+
+  // get sort index of target
+  const targetSortIndex = state[targetGroupId].sortIndex;
+  const sourceSortIndex = state[sourceGroupId].sortIndex;
+
+  // get sort index of either previous or next depending on before param
+  const neighborSortIndex = getNeighborSortIndex(sortedGroups, targetSortIndex, isBefore);
+
+  // if the trade would result in no change in order, keep the old sortIndex
+  if (neighborSortIndex === sourceSortIndex) {
+    return sourceSortIndex;
+  }
+
+  // generate new sort index that is between params
+  return isBefore
+    ? getNewSortIndexBetween(neighborSortIndex, targetSortIndex)
+    : getNewSortIndexBetween(targetSortIndex, neighborSortIndex);
 }
 
 function cards(state = {}, action) {
@@ -62,11 +114,21 @@ function cards(state = {}, action) {
         },
       };
     case NEW_GROUP_ADDED:
+      const lastSortIndex = R.compose(R.last, getGroupSortIndicesFromGroups)(state);
       return {
         ...state,
         [action.payload.groupId]: {
-          name: action.payload.groupName,
+          title: action.payload.title,
+          sortIndex: getNewSortIndexBetween(lastSortIndex),
           cards: {},
+        },
+      };
+    case GROUP_MOVED:
+      return {
+        ...state,
+        [action.payload.sourceGroupId]: {
+          ...state[action.payload.sourceGroupId],
+          sortIndex: getNewSortIndexForTarget(action.payload.sourceGroupId, action.payload.targetGroupId, action.payload.isBefore, state),
         },
       };
     default:
@@ -74,8 +136,20 @@ function cards(state = {}, action) {
   }
 }
 
-export function selectAvailableItemsInStore(state) {
-  return R.values(state);
+function getSortedCards(cards) {
+  return R.compose(
+    R.sortBy(R.prop('sortIndex')),
+    R.values,
+    R.mapObjIndexed((card, cardId) => ({ ...card, cardId })),
+  )(cards);
+}
+
+export function selectCardGroups(state) {
+  return R.compose(
+    R.sortBy(R.prop('sortIndex')),
+    R.values,
+    R.mapObjIndexed((group, groupId) => ({ ...group, cards: getSortedCards(group.cards), groupId })),
+  )(state);
 }
 
 export default cards;

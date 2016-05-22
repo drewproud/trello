@@ -4,11 +4,10 @@ import EditRemoveCardControl from './EditRemoveCardControl';
 const Card = React.createClass({
   propTypes: {
     item: React.PropTypes.object.isRequired,
-    addNewCard: React.PropTypes.func.isRequired,
   },
 
   render: function() {
-    const { item, addNewCard, removeItemFromCart } = this.props;
+    const { item, removeItemFromCart } = this.props;
     const { name, id } = item;
     const text = 'test';
 

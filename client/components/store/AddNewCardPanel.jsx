@@ -1,6 +1,11 @@
 import React from 'react';
 
 const AddNewCardPanel = React.createClass({
+  propTypes: {
+    groupId: React.PropTypes.string.isRequired,
+    addNewCard: React.PropTypes.func.isRequired,
+  },
+
   getInitialState: function() {
     return {
       text: '',
@@ -10,7 +15,7 @@ const AddNewCardPanel = React.createClass({
   handleClick: function(event) {
     event.preventDefault();
     const { text } = this.state;
-    this.props.addNewCard('test', text);
+    this.props.addNewCard(this.props.groupId, text);
   },
 
   setText: function(event) {
